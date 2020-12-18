@@ -20,6 +20,10 @@ namespace PolymorphicAPI
         {
             services.AddControllers()
                 .AddNewtonsoftJson(opt => opt.SerializerSettings.Converters.Add(new EventConverter()));
+
+            services.AddSwaggerGen(options => {
+                options.UseOneOfForPolymorphism();
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -39,6 +43,13 @@ namespace PolymorphicAPI
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+            });
+
+            app.UseSwagger();
+
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Events API V1");
             });
         }
     }
