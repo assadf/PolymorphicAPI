@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json.Linq;
 using PolymorphicAPI.Models;
 using System;
+using System.Collections.Generic;
 
 namespace PolymorphicAPI
 {
@@ -8,13 +9,15 @@ namespace PolymorphicAPI
     {
         protected override EventCommand Create(Type objectType, JObject jObject)
         {
-            var eventType = jObject["EventType"].Value<string>();
+            Dictionary<string, object> items = new Dictionary<string, object>(jObject.ToObject<IDictionary<string, object>>(), StringComparer.CurrentCultureIgnoreCase);
 
-            switch (eventType)
+            var eventType = items["eventtype"];
+
+            switch (eventType.ToString().ToLowerInvariant())
             {
-                case "CreateEvent":
+                case "createevent":
                     return new CreateEventCommand();
-                case "CancelEvent":
+                case "cancelevent":
                     return new CancelEventCommand();
                 default:
                     throw new NotSupportedException("Event Type Not Supported");
